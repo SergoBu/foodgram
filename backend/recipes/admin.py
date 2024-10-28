@@ -20,8 +20,8 @@ class RecipeAdmin(admin.ModelAdmin):
         'name', 'author', 'favorite_count',
         'ingredients_in_recipe', 'tags_in_recipe',
     )
+    search_fields = ('name', 'author',)
     list_filter = ('author', 'name', 'tags__name',)
-    search_fields = ('name', 'author')
 
     @admin.display(description='Добавили в избранное')
     def favorite_count(self, obj):
@@ -64,16 +64,24 @@ class IngredientAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
+class RecipeIngredientAdmin(admin.ModelAdmin):
+    list_display = ('recipe', 'ingredient', 'amount',)
+
+
 class TagAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug',)
     list_filter = ('name',)
     search_fields = ('name', 'slug',)
 
 
+class RecipeTagAdmin(admin.ModelAdmin):
+    list_display = ("recipe", "tag",)
+
+
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Recipe, RecipeAdmin)
-admin.site.register(RecipeTag)
-admin.site.register(RecipeIngredient)
+admin.site.register(RecipeTag, RecipeTagAdmin)
+admin.site.register(RecipeIngredient, RecipeIngredientAdmin)
 admin.site.register(Favorite)
 admin.site.register(ShoppingCart)
 admin.site.register(Ingredient, IngredientAdmin)

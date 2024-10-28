@@ -24,9 +24,12 @@ class UserAdmin(admin.ModelAdmin):
     @admin.display(description='Количество рецептов')
     def recipes(self, obj):
         return obj.recipes.count()
+    
+class FollowAdmin(admin.ModelAdmin):
+    list_display = ("user", "following",)
 
 
 admin.site.register(User, UserAdmin)
-admin.site.register(Follow)
+admin.site.register(Follow, FollowAdmin)
 admin.site.unregister(Group)
 admin.site.unregister(TokenProxy)
