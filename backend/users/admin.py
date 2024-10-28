@@ -24,7 +24,8 @@ class UserAdmin(admin.ModelAdmin):
     @admin.display(description='Количество рецептов')
     def recipes(self, obj):
         return obj.recipes.count()
-    
+
+
 class FollowAdmin(admin.ModelAdmin):
     list_display = ("user", "following",)
 

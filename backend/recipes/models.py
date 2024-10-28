@@ -6,12 +6,13 @@ from django.core.validators import MinValueValidator
 from django.db import models
 
 from recipes.constants import (
-    LIMIT_TAG_NAME,
     LIMIT_INGREDIENT_NAME,
     LIMIT_RECIPE_NAME,
     LIMIT_SHORT_LINK,
+    LIMIT_TAG_NAME,
     MIN_LIMIT
 )
+
 
 User = get_user_model()
 

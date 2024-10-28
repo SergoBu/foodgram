@@ -3,8 +3,11 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 from users.constants import (
-    LIMIT_EMAIL, LIMIT_USERNAME,
-    LIMIT_NAME, LIMIT_PASSWORD)
+    LIMIT_EMAIL,
+    LIMIT_NAME,
+    LIMIT_PASSWORD,
+    LIMIT_USERNAME
+)
 
 from users.validators import username_valdation
 
