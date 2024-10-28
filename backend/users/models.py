@@ -6,8 +6,7 @@ from users.constants import (
     LIMIT_EMAIL,
     LIMIT_NAME,
     LIMIT_PASSWORD,
-    LIMIT_USERNAME
-)
+    LIMIT_USERNAME)
 
 from users.validators import username_valdation
 
