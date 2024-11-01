@@ -1,5 +1,3 @@
-from datetime import datetime as dt
-
 from django.db.models import Sum
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -265,7 +263,7 @@ class RecipeViewSet(ModelViewSet):
         response = HttpResponse(purchase_file, content_type='text/plain')
         response[
             'Content-Disposition'
-        ] = 'attachment; filename='f'{FILENAME+dt.now().strftime("%d/%m/%Y")}'
+        ] = 'attachment; filename='f'{FILENAME}'
         return response
 
     @action(detail=True, methods=['post', ],
