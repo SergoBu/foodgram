@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
+from api.constants import MIN_AMOUNT
 from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
 from users.models import Follow
 
@@ -46,11 +47,17 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
-        return bool(
-            request
-            and request.user.is_authenticated
-            and obj.following.filter(user=request.user).exists()
-        )
+        if (request
+                and request.user.is_authenticated
+                and obj.following.filter(user=request.user).exists()):
+            return True
+        return False
+
+    def validate(self, data):
+        if not data.get('avatar'):
+            raise serializers.ValidationError(
+                {'avatar': 'Поле не может быть пустым!'})
+        return data
 
 
 class PasswordChangeSerializer(serializers.Serializer):
@@ -111,7 +118,7 @@ class AddIngredientInRecipeSerializer(serializers.ModelSerializer):
         fields = ('id', 'amount')
 
     def validate_amount(self, amount):
-        if amount < 1:
+        if amount < MIN_AMOUNT:
             raise serializers.ValidationError(
                 'Добавьте количество ингредиента'
             )
@@ -169,6 +176,7 @@ class EasyRecipeSerializer(serializers.ModelSerializer):
             'id', 'name',
             'image', 'cooking_time'
         )
+        read_only_fields = '__all__',
 
 
 class CreateRecipeSerializer(serializers.ModelSerializer):
@@ -190,7 +198,7 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
         )
 
     def validate_image(self, image_data):
-        if image_data is None:
+        if not image_data:
             raise serializers.ValidationError(
                 'Поле Картинка не должно быть пустым'
             )
@@ -211,8 +219,10 @@ class CreateRecipeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Список ингредиентов не может быть пустым!'
             )
-        ing_set = {ingredient.get('id') for ingredient in ingredients}
-        if len(ing_set) != len(ingredients):
+        unique_ingredients = {
+            ingredient.get('id') for ingredient in ingredients
+        }
+        if len(unique_ingredients) != len(ingredients):
             raise serializers.ValidationError(
                 'Ингредиенты не могут повторяться'
             )
@@ -272,12 +282,11 @@ class SubscriptionShowSerializer(UserSerializer):
                 recipes = obj.recipes.all()[:int(recipes_limit)]
             else:
                 recipes = obj.recipes.all()
-            if recipes:
-                serializer = EasyRecipeSerializer(
-                    recipes,
-                    many=True
-                )
-                return serializer.data
+            serializer = EasyRecipeSerializer(
+                recipes,
+                many=True
+            )
+            return serializer.data
         return []
 
     def get_recipes_count(self, obj):
