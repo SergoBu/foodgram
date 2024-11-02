@@ -129,8 +129,11 @@ class IngredientViewset(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(ModelViewSet):
-    # queryset = Recipe.objects.order_by('-id').select_related('author')
-    queryset = Recipe.objects.order_by('-id')
+    queryset = (
+        Recipe.objects.order_by('-id').select_related('author')
+        .prefetch_related('tags', 'ingredients')
+        .all()
+    )
     permission_classes = [IsAuthorOrAuthenticatedOrRead,]
     pagination_class = PagePagination
     http_method_names = [
@@ -138,32 +141,6 @@ class RecipeViewSet(ModelViewSet):
     ]
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
-
-    # def get_queryset(self):
-    #     queryset = self.queryset
-    #     tags = self.request.query_params.getlist('tags')
-    #     if tags:
-    #         queryset = queryset.filter(
-    #             tags__slug__in=tags).distinct()
-    #     author = self.request.query_params.get('author')
-    #     if author:
-    #         queryset = queryset.filter(author=author)
-    #     user = self.request.user
-    #     if user.is_anonymous:
-    #         return queryset
-    #     is_in_shopping = self.request.query_params.get('is_in_shopping_cart')
-    #     if is_in_shopping in ('1', 'true',):
-    #         queryset = self.queryset.filter(id__in=user.cart.values_list(
-    #             'recipe', flat=True))
-    #     elif is_in_shopping in ('0', 'false',):
-    #         queryset = self.queryset.exclude(id__in=user.cart.values_list(
-    #             'recipe', flat=True))
-    #     is_favorited = self.request.query_params.get('is_favorited')
-    #     if is_favorited in ('1', 'true',):
-    #         queryset = queryset.filter(favorite=user)
-    #     if is_favorited in ('0', 'false',):
-    #         queryset = queryset.exclude(favorite=user)
-    #     return queryset
 
     def get_serializer_class(self):
         if self.request.method in ['POST', 'PATCH']:
