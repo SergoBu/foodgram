@@ -134,7 +134,7 @@ class RecipeViewSet(ModelViewSet):
         .prefetch_related('tags', 'ingredients')
         .all()
     )
-    permission_classes = [IsAuthorOrAuthenticatedOrRead,]
+    permission_classes = [IsAuthorOrAuthenticatedOrRead, ]
     pagination_class = PagePagination
     http_method_names = [
         'get', 'post', 'patch', 'delete'
