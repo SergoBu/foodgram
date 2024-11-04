@@ -1,2 +1,2 @@
 MIN_AMOUNT = 1
-FILENAME = 'shopping-list.txt'
+FILENAME_SHOPPING_LIST = 'shopping-list.txt'

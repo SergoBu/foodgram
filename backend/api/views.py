@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from api.constants import FILENAME
+from api.constants import FILENAME_SHOPPING_LIST
 from api.filters import RecipeFilter
 from api.pagination import PagePagination
 from api.permission import IsAuthorOrAuthenticatedOrRead
@@ -240,7 +240,7 @@ class RecipeViewSet(ModelViewSet):
         response = HttpResponse(purchase_file, content_type='text/plain')
         response[
             'Content-Disposition'
-        ] = f'attachment; filename={FILENAME}'
+        ] = f'attachment; filename={FILENAME_SHOPPING_LIST}'
         return response
 
     @action(detail=True, methods=['post', ],

@@ -44,15 +44,15 @@ class User(AbstractUser):
         verbose_name='Аватар'
     )
 
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
     def __str__(self):
         return self.username
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'last_name', 'first_name']
-
-    class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
 
 
 class Follow(models.Model):
